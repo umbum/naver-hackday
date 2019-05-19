@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>Secure Keyboard - 2019 Summer Hackday</title>
+    <style>
+        .header-container{
+            text-align: center;
+            vertical-align: center;
+            padding-top: 5px;
+            padding-bottom: 5px;
+            border-bottom: 3px solid rgba(0,0,0,0.15);
+            background-color: #59BA41;
+        }
+
+        .header-container > h3{
+            color: white;
+        }
+
+        .container{
+            text-align: center;
+        }
+
+        .button{
+            display: inline-block;
+            position: relative;
+            cursor: pointer;
+            outline: none;
+            white-space: nowrap;
+            padding: 0 22px;
+            font-size: 14px;
+            height: 40px;
+            line-height: 40px;
+            color: #FFF;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            border: none;
+            text-shadow: 1px 1px 1px rgba(0,0,0,0.2);
+            margin: 5px 50px;
+        }
+
+        .button-green {
+            background-color: #59BA41;
+        }
+
+        .button.button-3d {
+            border-radius: 3px;
+            border-bottom: 3px solid rgba(0,0,0,0.15);
+        }
+
+        .container  .button {
+            text-decoration: none;
+        }
+
+        .company-table{
+            border: 1px solid gray;
+            margin: auto;
+        }
+
+        .company-table > tbody >tr > td{
+            width: 50px;
+            height: 50px;
+            border: 1px solid gray;
+            font-size: 8px;
+        }
+
+        .container > *{
+            margin-top: 20px;
+        }
+
+        img{
+            width: 45px;
+        }
+
+        caption{
+            margin-bottom: 10px;
+        }
+    </style>
+
+    <link rel="shortcut icon" href="/templates/src/img/favicon.ico">
+    <link rel="icon" href="/templates/src/img/favicon.ico">
+
+</head>
+<body>
+<!--Header:: begin-->
+<div class="header-container">
+    <h3>Secure Keyboard</h3>
+</div>
+<!--Header:: end-->
+
+<!--Content:: begin-->
+<div class="container">
+    <!--Card Company Selector:: begin-->
+    <div style="padding: auto;">
+        <table class="company-table">
+            <caption style="text-align:left; font-weight: bold;">카드사 선택</caption>
+            <tbody>
+                <tr>
+                    <td name="card-container" onclick="selectCard(0)">
+                        <img src="/templates/src/img/icon-bc.png"/>
+                        비씨카드
+                    </td>
+                    <td name="card-container" onclick="selectCard(1)">
+                        <img src="/templates/src/img/icon-citi.png"/>
+                        씨티카드
+                    </td>
+                    <td name="card-container" onclick="selectCard(2)">
+                        <img src="/templates/src/img/icon-hana.png"/>
+                        하나카드
+                    </td>
+                    <td name="card-container" onclick="selectCard(3)">
+                        <img src="/templates/src/img/icon-hyundai.png"/>
+                        현대카드
+                    </td>
+                    <td name="card-container" onclick="selectCard(4)">
+                        <img src="/templates/src/img/icon-kakao.png"/>
+                        카카오카드
+                    </td>
+                    <td name="card-container" onclick="selectCard(5)">
+                        <img src="/templates/src/img/icon-lotte.png"/>
+                        롯데카드
+                    </td>
+                    <td name="card-container" onclick="selectCard(6)">
+                        <img src="/templates/src/img/icon-nh.png"/>
+                        농협카드
+                    </td>
+                    <td name="card-container" onclick="selectCard(7)">
+                        <img src="/templates/src/img/icon-shinhan.png"/>
+                        신한카드
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <!--Card Company Selector:: end-->
+
+    <!--Action Button:: begin-->
+    <div class="container">
+        <a class="button button-3d button-green" onclick="register()"><i class="icon-repeat"></i>카드등록</a>
+    </div>
+    <!--Action Button:: end-->
+</div>
+<!--Content::end-->
+
+<script>
+    var card = "";
+    var selected = -1;
+
+    function selectCard(idx){
+        if(selected !== -1){
+            // border: 1px solid gray;
+            td = document.getElementsByName("card-container")[selected];
+            td.setAttribute("style", "");
+        }
+
+        td = document.getElementsByName("card-container")[idx];
+        td.setAttribute("style", "border: 2px solid #59BA41;");
+        selected = idx;
+        switch(idx){
+            case 0:
+                card = "bc";
+                break;
+            case 1:
+                card = "citi";
+                break;
+            case 2:
+                card = "hana";
+                break;
+            case 3:
+                card = "hyundai";
+                break;
+            case 4:
+                card = "kakao";
+                break;
+            case 5:
+                card = "lotte";
+                break;
+            case 6:
+                card = "nh";
+                break;
+            case 7:
+                card = "shinhan";
+                break;
+        }
+    }
+
+    function register(){
+        if(card === ""){
+            alert("카드사를 선택해 주세요.");
+            return;
+        }
+
+        window.open("/register/" + card, "register", "fullscreen=no,toolbar=no,status=no, menubar=no,scrollbars=no,resizable=no,width=500,height=700");
+    }
+
+</script>
+</body>
+</html>

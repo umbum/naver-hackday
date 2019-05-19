@@ -1,0 +1,9 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+<input type="hidden" th:data-key-map-id="${keyMapId}" id="request-hidden-value" />
+<th:block th:each="keypadDto : ${keypadDtoList}">
+    <img name="btn-secure" class="btn-secure" th:data-value="${keypadDto.getHashAndEncryptedValue()}" th:src="'data:image/png;base64, ' + ${keypadDto.getB64String()}"/>
+</th:block>
+</body>
+</html>

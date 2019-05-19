@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Secure Keyboard - 2019 Summer Hackday</title>
+    <style>
+        .header-container {
+            text-align: center;
+            vertical-align: center;
+            padding-top: 5px;
+            padding-bottom: 5px;
+            border-bottom: 3px solid rgba(0, 0, 0, 0.15);
+            background-color: #59BA41;
+        }
+
+        .header-container > h3 {
+            color: white;
+        }
+
+        .container {
+            text-align: center;
+        }
+
+        .button {
+            display: inline-block;
+            position: relative;
+            cursor: pointer;
+            outline: none;
+            white-space: nowrap;
+            padding: 0 22px;
+            font-size: 14px;
+            height: 40px;
+            line-height: 40px;
+            color: #FFF;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            border: none;
+            text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.2);
+            margin: 5px 50px;
+        }
+
+        .button-green {
+            background-color: #59BA41;
+        }
+
+        .button-gray {
+            background-color: #fafafc;
+        }
+
+        .button.button-3d {
+            border-radius: 3px;
+            border-bottom: 3px solid rgba(0, 0, 0, 0.15);
+        }
+
+        .container .button {
+            text-decoration: none;
+        }
+
+        .company-table > tbody > tr > td {
+            width: 50px;
+            height: 50px;
+            border: 1px solid gray;
+            font-size: 8px;
+        }
+
+        .container > * {
+            margin-top: 20px;
+        }
+
+        img {
+            width: 45px;
+        }
+
+        caption {
+            margin-bottom: 10px;
+        }
+
+        .number-container {
+            display: inline-block;
+            background-color: whitesmoke;
+            width: 90px;
+        }
+
+        .in-block-text {
+            margin-left: 20px;
+            margin-top: 10px;
+            margin-bottom: 10px;
+            font-size: 12px;
+            font-weight: 700;
+            text-align: left;
+        }
+
+        #btn-keypad{
+            border-right: 1px solid black;
+            border-bottom: 1px solid black;
+
+        }
+
+        .btn-secure{
+            width: 30%;
+        }
+    </style>
+
+    <link rel=" shortcut icon" href="/templates/src/img/favicon.ico">
+    <link rel="icon" href="/templates/src/img/favicon.ico">
+
+</head>
+<body>
+<img>
+<!--Header:: begin-->
+<div class="header-container">
+    <h3>Secure Keyboard</h3>
+</div>
+<!--Header:: end-->
+
+<!--Content:: begin-->
+<div class="container">
+    <!--Card Information Input:: begin-->
+    <div id="card-form" style="padding: auto; margin-left: 10px; margin-right: 10px;">
+        <div style="width: 20px; text-align: left;">
+            <img id="card-label" style="width:50px;height:20px;">
+        </div>
+        <div style="text-align:left; width: 100%;">
+            <img src="/templates/src/img/credit-card.png" style="width:25px;height:13px;">
+            카드 정보를 입력해 주세요
+        </div>
+        <div style="width: 100%; text-align: left; margin-top: 10px; background-color: rgba(0, 0, 0, 0.08); display: inline-block;">
+            <div class="in-block-text">
+                카드 번호
+            </div>
+            <div style="text-align: center;">
+                <div class="number-container">
+                    &nbsp;
+                </div>
+                -
+                <div class="number-container">
+                    &nbsp;
+                </div>
+                -
+                <div class="number-container">
+                    &nbsp;
+                </div>
+                -
+                <div class="number-container">
+                    &nbsp;
+                </div>
+            </div>
+            <div class="in-block-text">※ 보안 키보드를 통해 입력해 주세요.</div>
+            <div id="btn-keypad" style="float: right; background-color: white; margin: 10px; padding: 5px; font-size: 10px; cursor:pointer;">
+                키보드
+            </div>
+        </div>
+    </div>
+    <!--Card Information Input:: end-->
+    <!--Action Button:: begin-->
+    <div class="container">
+        <a class="button button-3d button-green" onclick="sendCardInfo()"><i class="icon-repeat"></i>확인</a>
+        <a class="button button-3d button-gray" style="color: black;" onclick="closeWindow()"><i class="icon-repeat"></i>취소</a>
+    </div>
+    <!--Action Button:: end-->
+</div>
+<!--Content::end-->
+
+<!--Secure Keyboard:: begin-->
+<div id="secure-keyboard-container" style="width:100%; height: 200px; margin-top: 20px; margin-left: 15px; padding: auto;">
+
+</div>
+<!--Secure Keyboard:: end-->
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+<script>
+    // set label image
+    var card = window.location.pathname.split('/')[2];
+    document.getElementById('card-label').setAttribute('src', '/templates/src/img/label-' + card + '.png');
+
+    // card info variable
+    var cardNumbers = [];
+
+    function pushNumber(value){
+        if(cardNumbers.length < 16){
+            cardNumbers.push(value);
+            if(cardNumbers.length < 5){
+                document.getElementsByClassName('number-container')[0].innerHTML += '*';
+            }else if(cardNumbers.length < 9){
+                document.getElementsByClassName('number-container')[1].innerHTML += '*';
+            }else if(cardNumbers.length < 13){
+                document.getElementsByClassName('number-container')[2].innerHTML += '*';
+            }else{
+                document.getElementsByClassName('number-container')[3].innerHTML += '*';
+            }
+        }
+    }
+
+    function popNumber(value){
+        if(cardNumbers.length > 0){
+            cardNumbers.pop();
+        }
+    }
+
+    // keypad click event
+    $("#btn-keypad").click(function(){
+        getKeybaord();
+    });
+
+
+    var isCall = false;
+
+    function getKeybaord(){
+        // console.log("in getKeyboard!");
+        // $.get("127.0.0.1:8080", function(data, status){
+        //     console.log("Data: " + data + "\nStatus: " + status);
+        // });
+        if(isCall === false) {
+            var X = new XMLHttpRequest();
+            var url = 'http://127.0.0.1:8080/securekeyboard/hana';
+            X.open('GET', url, false);
+            X.send();
+            createElementFromHTML(X.responseText);
+            isCall = true;
+        }
+    }
+
+    function sendCardInfo(){
+        if(cardNumbers.length !== 16){
+            alert("카드 번호를 모두 입력해 주세요.");
+            return;
+        }
+
+        var jsonValue = new Object();
+        jsonValue.cardNumbers = cardNumbers;
+        jsonValue.reqId= document.getElementById('request-hidden-value').getAttribute('data-key-map-id');
+
+        var X = new XMLHttpRequest();
+        var url = "http://127.0.0.1:8080/register/card/woori";
+        X.open('POST', url, true);
+        X.setRequestHeader("Content-Type", "application/json");
+        X.onreadystatechange = function () {
+            if (X.readyState === 4 && X.status === 200) {
+                var json = JSON.parse(X.responseText);
+                console.log(json);
+            }
+        };
+        X.send(JSON.stringify(jsonValue));
+    }
+
+    function closeWindow(){
+        window.close();
+    }
+
+
+    function createElementFromHTML(htmlString) {
+        div = document.getElementById('secure-keyboard-container');
+        div.innerHTML = htmlString;
+
+        $('.btn-secure').on('click', function(){
+            pushNumber(this.getAttribute('data-value'));
+        });
+
+    }
+</script>
+</body>
+</html>
