@@ -5,17 +5,21 @@ import static com.hackday.securekeyboard.SecureKeyboardApplication.*;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Base64;
 import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 import org.apache.commons.io.FileUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Service;
 
 import com.hackday.securekeyboard.dto.KeypadDto;
+import com.hackday.securekeyboard.util.EncryptUtil;
 import com.hackday.securekeyboard.util.Encryption;
 import com.hackday.securekeyboard.vo.KeyMappingSet;
 
@@ -24,6 +28,11 @@ public class SecureKeyboardServiceImpl implements SecureKeyboardService {
 
     @Autowired
     private Encryption encryptionUtil;
+
+    @Value(value = "${publicKeyA}")
+    private String publicKey;
+
+    private static final List<String> NUMBERS = Arrays.asList("0", "1", "2", "3", "4", "5", "6", "7", "8", "9");
 
     private String getBase64FromFile(String classPathResource) {
         byte[] fileContent = null;
@@ -43,8 +52,14 @@ public class SecureKeyboardServiceImpl implements SecureKeyboardService {
         List<String> encryptedKeyList = null;
         List<String> hashedAndEncryptedKeyList = null;
         try {
-            encryptedKeyList = encryptionUtil.rsaEncryption();
-            hashedAndEncryptedKeyList = encryptionUtil.rsaToSha1(encryptedKeyList);
+            encryptedKeyList = NUMBERS.stream()
+                .map(number -> EncryptUtil.rsa(number, publicKey))
+                .collect(Collectors.toList());
+
+            hashedAndEncryptedKeyList = encryptedKeyList.stream()
+                .map(EncryptUtil::sha1)
+                .collect(Collectors.toList());
+
         } catch (Exception e) {
             // TODO : runtime exception 상속받아서 던질 것!
             e.printStackTrace();
